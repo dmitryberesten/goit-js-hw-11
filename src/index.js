@@ -12,7 +12,6 @@ const refs = {
 };
 
 let page = 1; // початкове значення параметра page повинно бути 1 сторніка
-let visibleCards = 0; // початкове значення карток зображень
 
 refs.btnLoadMore.style.display = 'none'; // ховаємо кнопку
 refs.form.addEventListener('submit', onSearch); // слухач події на submit
@@ -27,13 +26,12 @@ function onSearch(evt) {
 
   const name = refs.input.value.trim(); // обрізання пробілів до і після слова
 
-  // якщо слово пошука не пуста строка то:
+  // якщо слово пошука НЕ пуста строка то:
   if (name !== '') {
     pixabay(name); // отримати зображення
 
-    refs.btnLoadMore.style.display = 'none'; // ховаємо кнопку loadMore
   } else {
-    refs.btnLoadMore.style.display = 'none'; 
+    refs.btnLoadMore.style.display = 'none';
 
     // вивести повідомлення про те, що НЕ знайдено жодного зображення
     return Notiflix.Notify.failure(
@@ -47,7 +45,6 @@ function onBtnLoadMore() {
   const name = refs.input.value.trim();
   page += 1; // додаємо +1 сторінку яка має +40 картинок
   pixabay(name, page); // завантаження зображень
-  refs.btnLoadMore.style.display = 'flex';
 }
 
 // отримання зображень
@@ -57,7 +54,7 @@ async function pixabay(name, page) {
   // параметри запиту на бекенд
   const options = {
     params: {
-      key: '33717102-715c10c4f2cae8a60768f134f', // персональний ключ з pixabay
+      key: '33717102-715c10c4f2cae8a60768f134f', // мій персональний ключ з pixabay
       q: name,
       image_type: 'photo',
       orientation: 'horizontal',
@@ -70,14 +67,11 @@ async function pixabay(name, page) {
   try {
     // отримання відповіді-результату від бекенду
     const response = await axios.get(API_URL, options);
-    visibleCards += response.data.hits.length; // довжина всіх зображень
 
     // сповіщення notiflix
     notification(
-      response.data.hits.length,
-      visibleCards,
-      options.params.per_page,
-      response.data.total
+      response.data.hits.length, // довжина всіх знайдених зображень
+      response.data.total // отримання кількості
     );
 
     createMarkup(response.data); // рендер розмітки на сторінку
@@ -129,7 +123,7 @@ const simpleLightBox = new SimpleLightbox('.gallery a', {
 });
 
 // всі сповіщення notiflix
-function notification(length, visibleCards, per_page, totalHits) {
+function notification(length, totalHits) {
   if (length === 0) {
 
       // вивести повідомлення про те, що НЕ знайдено жодного зображення
