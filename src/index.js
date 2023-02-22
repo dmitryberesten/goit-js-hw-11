@@ -149,3 +149,5 @@ function notification(length, totalHits) {
     );
   }
 }
+
+// Діма берестень
