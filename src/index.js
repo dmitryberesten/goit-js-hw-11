@@ -150,4 +150,4 @@ function notification(length, totalHits) {
   }
 }
 
-// Діма берестень
+// Діма Берестень
